@@ -26,30 +26,40 @@ defmodule TodoWeb.TasksLive do
   def render(assigns) do
     ~L"""
     <h1>Tasks</h1>
-    <%= f = form_for @changeset, "#",  [phx_change: :validate, phx_submit: :create] %>
-      <%= text_input f, :name, placeholder: "Name", phx_debounce: "2000" %>
-      <%= error_tag f, :name %>
+    <%= f = form_for @changeset, "#",  [phx_change: :validate, phx_submit: :create, class: "create-form"] %>
+      <div class="field">
+        <%= text_input f, :name, placeholder: "Name", phx_debounce: "2000" %>
+        <%= error_tag f, :name %>
+      </div>
       <%= submit "Create", phx_disable_with: "Saving..." %>
     </form>
     <%= for task <- @tasks do %>
       <div>
-        <p phx-click="update" phx-value-id="<%= task.id %>">
-          <%= task.id %> - <%= task.name %>
-          <%= if task.completed, do: "completed", else: "" %>
-        </p>
-        <button class="alert-danger" phx-click="delete" phx-value-id="<%= task.id %>">Delete</button>
-        <%= ff = form_for task.changeset, "#", phx_change: :validate_subtask, phx_submit: :create_subtask, id: "subtask-form-#{task.id}"%>
-          <%= hidden_input ff, :parent_id, value: task.id %>
-          <%= text_input ff, :name %>
+        <div class="task-header">
+          <p phx-click="update" phx-value-id="<%= task.id %>" class="task-name completed-<%= task.completed %>">
+            <%= task.id %> - <%= task.name %>
+            <span><%= if task.completed, do: "completed", else: "" %></span>
+          </p>
+          <button class="alert-danger" phx-click="delete" phx-value-id="<%= task.id %>">Delete</button>
+        </div>
+        <%= ff = form_for task.changeset, "#", phx_change: :validate_subtask, phx_submit: :create_subtask, id: "subtask-form-#{task.id}", class: "create-form" %>
+          <div class="field">
+            <%= hidden_input ff, :parent_id, value: task.id %>
+            <%= text_input ff, :name %>
+          </div>
           <%= submit "Create", phx_disable_with: "Saving..." %>
         </form>
-        <%= for subtask <- task.subtasks do %>
-          <p phx-click="update_subtask" phx-value-id="<%= subtask.id %>">
-            <%= subtask.name %>
-            <%= if subtask.completed, do: "completed", else: "" %>
-          </p>
-          <button class="alert-danger" phx-click="delete_subtask" phx-value-id="<%= subtask.id %>">Delete</button>
-        <% end %>
+        <div class="subtasks-list">
+          <%= for subtask <- task.subtasks do %>
+            <div class="task-header">
+              <p class="task-name completed-<%= subtask.completed %>" phx-click="update_subtask" phx-value-id="<%= subtask.id %>">
+                <%= subtask.name %>
+                <span><%= if subtask.completed, do: "completed", else: "" %></span>
+              </p>
+              <button class="alert-danger" phx-click="delete_subtask" phx-value-id="<%= subtask.id %>">Delete</button>
+            </div>
+          <% end %>
+        </div>
       </div>
     <% end %>
     """
@@ -89,6 +99,7 @@ defmodule TodoWeb.TasksLive do
     case Tasks.update_task(task, %{completed: !task.completed}) do
       {:ok, updated_task} ->
         Subtasks.update_all(updated_task.id, updated_task.completed)
+
         updated_task =
           updated_task
           |> Repo.preload(:subtasks)
