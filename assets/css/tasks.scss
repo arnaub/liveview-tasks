@@ -1,0 +1,24 @@
+.create-form, .task-header {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+.field, .task-name {
+  grid-column-start: 1;
+  grid-column-end: span 11;
+}
+
+.task-name span {
+  font-style: italic;
+}
+
+.subtasks-list {
+  width: 100%;
+  padding-left: 4rem;
+}
+
+.completed-true {
+  text-decoration: line-through;
+}
+
