@@ -32,7 +32,7 @@ defmodule TodoWeb.TasksWithComponents.TaskFormComponent do
   def handle_event("create", %{"task" => task_params}, socket) do
     case Tasks.create_task(task_params) do
       {:ok, task} ->
-        send self(), {:create_task, %{task: task}}
+        send(self(), {:create_task, %{task: task}})
         socket = assign(socket, changeset: Tasks.change_task(%Task{}))
         {:noreply, socket}
 

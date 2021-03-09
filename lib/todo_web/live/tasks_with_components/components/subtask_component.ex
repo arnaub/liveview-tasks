@@ -35,8 +35,12 @@ defmodule TodoWeb.TasksWithComponents.SubtaskComponent do
 
     case Subtasks.delete_subtask(subtask) do
       {:ok, deleted_subtask} ->
+        send_update(TaskComponent,
+          id: deleted_subtask.parent_id,
+          action: :delete,
+          subtask_id: deleted_subtask.id
+        )
 
-        send_update TaskComponent, id: deleted_subtask.parent_id, action: :delete, subtask_id: deleted_subtask.id
         {:noreply, socket}
 
       {:error, _} ->

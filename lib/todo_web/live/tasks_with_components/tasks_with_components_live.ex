@@ -49,7 +49,7 @@ defmodule TodoWeb.TasksWithComponentsLive do
   end
 
   def handle_info({:delete_task, %{task_id: task_id}}, socket) do
-    socket = update(socket, :tasks, fn tasks -> tasks |> Enum.filter(&(&1.id != task_id))end)
+    socket = update(socket, :tasks, fn tasks -> tasks |> Enum.filter(&(&1.id != task_id)) end)
     socket = push_event(socket, "delete-task", %{id: task_id})
     {:noreply, socket}
   end

@@ -24,7 +24,9 @@ defmodule TodoWeb.TasksWithComponents.TaskComponent do
   end
 
   def update(%{action: :delete, subtask_id: subtask_id}, socket) do
-    socket = update(socket, :subtasks, fn subtasks -> subtasks |> Enum.filter(&(&1.id != subtask_id)) end)
+    socket =
+      update(socket, :subtasks, fn subtasks -> subtasks |> Enum.filter(&(&1.id != subtask_id)) end)
+
     socket = push_event(socket, "delete-subtask", %{id: subtask_id})
     {:ok, socket}
   end
@@ -32,7 +34,6 @@ defmodule TodoWeb.TasksWithComponents.TaskComponent do
   def update(assigns, socket) do
     {:ok, assign(socket, assigns)}
   end
-
 
   def render(assigns) do
     ~L"""
@@ -81,8 +82,9 @@ defmodule TodoWeb.TasksWithComponents.TaskComponent do
 
     case Tasks.delete_task(task) do
       {:ok, deleted_task} ->
-        send self(), {:delete_task, %{task_id: deleted_task.id}}
+        send(self(), {:delete_task, %{task_id: deleted_task.id}})
         {:noreply, socket}
+
       {:error, _} ->
         {:noreply, socket}
     end
