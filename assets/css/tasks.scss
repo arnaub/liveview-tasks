@@ -22,3 +22,18 @@
   text-decoration: line-through;
 }
 
+.task-card {
+  border-radius: 5px;
+  border: 1px solid #666;
+  box-sizing: border-box;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.task-card:nth-child(odd) {
+  background: #ffffff;
+}
+
+.task-card:nth-child(even) {
+  background: #f6f6f6;
+}
