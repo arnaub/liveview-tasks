@@ -19,6 +19,7 @@ defmodule TodoWeb.Router do
 
     live "/", PageLive, :index
     live "/tasks", TasksLive, :index
+    live "tasks-with-components", TasksWithComponentsLive, :index
   end
 
   # Other scopes may use custom stacks.
