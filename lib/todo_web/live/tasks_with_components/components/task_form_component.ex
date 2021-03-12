@@ -4,8 +4,6 @@ defmodule TodoWeb.TasksWithComponents.TaskFormComponent do
   alias Todo.Tasks
   alias Todo.Tasks.Task
 
-  alias Todo.Repo
-
   def mount(socket) do
     socket = assign(socket, changeset: Tasks.change_task(%Task{}))
     {:ok, socket}
